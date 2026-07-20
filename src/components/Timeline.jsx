@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'
-import { collection, query, where, orderBy, getDocs } from 'firebase/firestore'
+import { collection, query, where, orderBy, getDocs, doc, updateDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 
 export default function Timeline({ member, user, onBack }) {
   const [records, setRecords] = useState([])
   const [loading, setLoading] = useState(true)
+  const [editingId, setEditingId] = useState(null)
+  const [editingDate, setEditingDate] = useState('')
+  const [updating, setUpdating] = useState(false)
 
   useEffect(() => {
     loadRecords()
@@ -81,6 +84,41 @@ export default function Timeline({ member, user, onBack }) {
     return `${month}/${day}`
   }
 
+  const handleEditStart = (record) => {
+    setEditingId(record.id)
+    setEditingDate(record.meetingDate || '')
+  }
+
+  const handleEditCancel = () => {
+    setEditingId(null)
+    setEditingDate('')
+  }
+
+  const handleEditSave = async (recordId) => {
+    if (!editingDate.trim()) {
+      alert('面談日を入力してください')
+      return
+    }
+
+    setUpdating(true)
+    try {
+      const recordRef = doc(db, 'orgs/sawada/records', recordId)
+      await updateDoc(recordRef, {
+        meetingDate: editingDate,
+      })
+
+      // Reload records to apply sorting
+      await loadRecords()
+      setEditingId(null)
+      setEditingDate('')
+    } catch (error) {
+      console.error('更新エラー:', error)
+      alert('更新に失敗しました: ' + error.message)
+    } finally {
+      setUpdating(false)
+    }
+  }
+
   return (
     <div className="timeline-container">
       <div className="timeline-header">
@@ -101,16 +139,50 @@ export default function Timeline({ member, user, onBack }) {
               <div key={record.id} className="record-item">
                 <div className="record-meta">
                   <span className="record-type">[{record.type}]</span>
-                  <span className="record-date">
-                    {record.meetingDate ? (
-                      <>
-                        <span className="meeting-date">[面談: {formatMeetingDate(record.meetingDate)}]</span>
-                        <span className="created-date">{formatDate(record.createdAt)}</span>
-                      </>
-                    ) : (
-                      formatDate(record.createdAt)
-                    )}
-                  </span>
+                  {editingId === record.id ? (
+                    <div className="record-date-edit">
+                      <input
+                        type="date"
+                        value={editingDate}
+                        onChange={(e) => setEditingDate(e.target.value)}
+                        disabled={updating}
+                      />
+                      <button
+                        className="edit-save-btn"
+                        onClick={() => handleEditSave(record.id)}
+                        disabled={updating}
+                      >
+                        ✓
+                      </button>
+                      <button
+                        className="edit-cancel-btn"
+                        onClick={handleEditCancel}
+                        disabled={updating}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ) : (
+                    <span className="record-date">
+                      {record.meetingDate ? (
+                        <>
+                          <span className="meeting-date">[面談: {formatMeetingDate(record.meetingDate)}]</span>
+                          <span className="created-date">{formatDate(record.createdAt)}</span>
+                        </>
+                      ) : (
+                        formatDate(record.createdAt)
+                      )}
+                      {record.createdBy === user.uid && (
+                        <button
+                          className="edit-btn"
+                          onClick={() => handleEditStart(record)}
+                          title="面談日を編集"
+                        >
+                          ✎
+                        </button>
+                      )}
+                    </span>
+                  )}
                   <span className="record-visibility">
                     {record.visibility === 'private' ? '🔒' : '🌐'}
                   </span>

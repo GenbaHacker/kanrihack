@@ -34,7 +34,10 @@ service cloud.firestore {
         resource.data.visibility == 'shared' ||
         resource.data.createdBy == request.auth.uid
       );
-      allow update, delete: if false;
+      allow update: if canAccess()
+        && request.auth.uid == resource.data.createdBy
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['meetingDate']);
+      allow delete: if false;
     }
 
     // orgs/sawada/config/allowlist (deny all - admin only)

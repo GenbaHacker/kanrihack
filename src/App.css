@@ -542,6 +542,74 @@ body {
   color: var(--color-text-secondary);
 }
 
+.edit-btn {
+  padding: 2px 6px;
+  background-color: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: var(--color-accent);
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 12px;
+  margin-left: var(--spacing-sm);
+  transition: all 0.2s ease;
+}
+
+.edit-btn:hover {
+  background-color: rgba(212, 175, 55, 0.2);
+  border-color: var(--color-accent);
+}
+
+.record-date-edit {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.record-date-edit input[type="date"] {
+  padding: 4px 8px;
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  border-radius: 3px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.record-date-edit input[type="date"]:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.edit-save-btn,
+.edit-cancel-btn {
+  padding: 2px 6px;
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.edit-save-btn:hover {
+  background-color: rgba(76, 175, 80, 0.2);
+  border-color: #4caf50;
+  color: #4caf50;
+}
+
+.edit-cancel-btn:hover {
+  background-color: rgba(244, 67, 54, 0.2);
+  border-color: #f44336;
+  color: #f44336;
+}
+
+.edit-save-btn:disabled,
+.edit-cancel-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .record-body {
   color: var(--color-text-primary);
   font-size: 14px;
