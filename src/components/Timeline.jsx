@@ -14,26 +14,41 @@ export default function Timeline({ member, user, onBack }) {
     setLoading(true)
     try {
       const recordsRef = collection(db, 'orgs/sawada/records')
-      const q = query(
+
+      // Query A: shared records (everyone can see)
+      const qA = query(
         recordsRef,
         where('memberId', '==', member.id),
+        where('visibility', '==', 'shared'),
         orderBy('createdAt', 'desc')
       )
-      const snapshot = await getDocs(q)
+      const snapshotA = await getDocs(qA)
 
-      const loadedRecords = snapshot.docs
-        .map((doc) => ({
+      // Query B: private records (only creator can see)
+      const qB = query(
+        recordsRef,
+        where('memberId', '==', member.id),
+        where('visibility', '==', 'private'),
+        where('createdBy', '==', user.uid),
+        orderBy('createdAt', 'desc')
+      )
+      const snapshotB = await getDocs(qB)
+
+      // Merge and sort by createdAt descending
+      const allRecords = [
+        ...snapshotA.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
           createdAt: doc.data().createdAt?.toDate?.() || new Date(),
-        }))
-        .filter((record) => {
-          // Privacy filter: show shared or own records
-          if (record.visibility === 'shared') return true
-          return record.createdBy === user.uid
-        })
+        })),
+        ...snapshotB.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate?.() || new Date(),
+        })),
+      ].sort((a, b) => b.createdAt - a.createdAt)
 
-      setRecords(loadedRecords)
+      setRecords(allRecords)
     } catch (error) {
       console.error('記録読み込みエラー:', error)
     } finally {

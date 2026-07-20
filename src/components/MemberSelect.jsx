@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { collection, getDocs, addDoc, query, where, orderBy } from 'firebase/firestore'
+import { collection, getDocs, addDoc, query, where } from 'firebase/firestore'
 import { db } from '../firebase'
 import { MEMBERS } from '../constants/members'
 
@@ -15,17 +15,19 @@ export default function MemberSelect({ onMemberSelect, onViewTimeline }) {
   const loadMembers = async () => {
     try {
       const membersRef = collection(db, 'orgs/sawada/members')
-      const q = query(membersRef, where('active', '==', true), orderBy('order'))
+      const q = query(membersRef, where('active', '==', true))
       const snapshot = await getDocs(q)
 
       if (snapshot.empty) {
         // Auto-seed members from constants
         await seedMembers()
       } else {
-        const loadedMembers = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }))
+        const loadedMembers = snapshot.docs
+          .map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+          .sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
         setMembers(loadedMembers)
       }
     } catch (error) {
