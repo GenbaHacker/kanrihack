@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isInAllowlist() {
+      let allowlistDoc = get(/databases/$(database)/documents/orgs/sawada/config/allowlist);
+      return allowlistDoc.data.emails.hasAny([request.auth.token.email]);
+    }
+
+    function canAccess() {
+      return isAuthenticated() && isInAllowlist();
+    }
+
+    // Default: deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // orgs/sawada/members collection
+    match /orgs/sawada/members/{memberId} {
+      allow read: if canAccess();
+      allow create: if canAccess();
+      allow update: if canAccess() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['active']);
+      allow delete: if false;
+    }
+
+    // orgs/sawada/records collection
+    match /orgs/sawada/records/{recordId} {
+      allow create: if canAccess() && request.resource.data.createdBy == request.auth.uid;
+      allow read: if canAccess() && (
+        resource.data.visibility == 'shared' ||
+        resource.data.createdBy == request.auth.uid
+      );
+      allow update, delete: if false;
+    }
+
+    // orgs/sawada/config/allowlist (deny all - admin only)
+    match /orgs/sawada/config/allowlist {
+      allow read, write: if false;
+    }
+  }
+}
