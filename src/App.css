@@ -1,0 +1,343 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --color-bg-primary: #1a1a1a;
+  --color-bg-secondary: #2d2d2d;
+  --color-bg-tertiary: #3a3a3a;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #e0e0e0;
+  --color-accent: #d4af37;
+  --color-accent-light: #ffd700;
+  --color-border: #4a4a4a;
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+}
+
+.app {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+/* Mobile: 縦1カラム（デフォルト） */
+.sidebar {
+  display: none;
+}
+
+.main-content {
+  width: 100%;
+  overflow-y: auto;
+}
+
+/* PC: 2カラム（768px以上） */
+@media (min-width: 768px) {
+  .app-layout {
+    flex-direction: row;
+  }
+
+  .sidebar {
+    display: flex;
+    width: 280px;
+    border-right: 1px solid var(--color-border);
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  .main-content {
+    flex: 1;
+    overflow-y: auto;
+  }
+}
+
+/* ===== メンバー選択画面 ===== */
+.member-select-container {
+  padding: var(--spacing-lg);
+}
+
+.member-select-container h1 {
+  font-size: 24px;
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-accent-light);
+}
+
+.member-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+  .member-select-container {
+    padding: var(--spacing-md);
+  }
+
+  .member-select-container h1 {
+    font-size: 18px;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .member-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: var(--spacing-sm);
+  }
+}
+
+.member-button {
+  padding: var(--spacing-md);
+  background-color: var(--color-bg-secondary);
+  border: 2px solid var(--color-border);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.member-button:hover {
+  background-color: var(--color-bg-tertiary);
+  border-color: var(--color-accent);
+  color: var(--color-accent-light);
+}
+
+.member-button.active {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent-light);
+  color: var(--color-bg-primary);
+}
+
+/* ===== 入力画面 ===== */
+.input-screen-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.input-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-bg-secondary);
+}
+
+.back-button {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background-color: var(--color-border);
+  border-color: var(--color-accent);
+}
+
+.header-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  flex: 1;
+}
+
+.header-info h2 {
+  font-size: 20px;
+  color: var(--color-accent-light);
+  margin: 0;
+}
+
+.share-toggle {
+  margin-left: auto;
+}
+
+.share-toggle label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.share-toggle input[type="checkbox"] {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+/* ===== タブ ===== */
+.input-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-bg-secondary);
+}
+
+.tab-button {
+  padding: var(--spacing-md);
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.tab-button:hover {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.tab-button.active {
+  color: var(--color-accent-light);
+  border-bottom-color: var(--color-accent);
+}
+
+/* ===== 入力コンテンツ ===== */
+.input-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-lg);
+}
+
+.tab-pane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  height: 100%;
+}
+
+.record-tab,
+.file-tab {
+  align-items: center;
+  justify-content: center;
+}
+
+.text-tab {
+  justify-content: flex-start;
+}
+
+.input-textarea {
+  flex: 1;
+  width: 100%;
+  padding: var(--spacing-md);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: none;
+  transition: all 0.2s ease;
+}
+
+.input-textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+}
+
+/* ===== ボタン ===== */
+.primary-button,
+.secondary-button {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.primary-button {
+  background-color: var(--color-accent);
+  color: var(--color-bg-primary);
+}
+
+.primary-button:hover {
+  background-color: var(--color-accent-light);
+  transform: translateY(-2px);
+}
+
+.secondary-button {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  width: 100%;
+}
+
+.secondary-button:hover {
+  background-color: var(--color-border);
+  border-color: var(--color-accent);
+}
+
+.timer {
+  font-size: 32px;
+  color: var(--color-accent-light);
+  font-weight: bold;
+  margin-top: var(--spacing-lg);
+}
+
+@media (max-width: 768px) {
+  .input-header {
+    flex-wrap: wrap;
+  }
+
+  .header-info {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-info h2 {
+    font-size: 18px;
+  }
+
+  .share-toggle {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .input-tabs {
+    gap: var(--spacing-sm);
+    padding: 0 var(--spacing-sm);
+    flex-wrap: wrap;
+  }
+
+  .tab-button {
+    flex: 0 1 auto;
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .input-textarea {
+    min-height: 200px;
+  }
+}
