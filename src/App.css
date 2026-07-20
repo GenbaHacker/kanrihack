@@ -100,7 +100,8 @@ body {
   display: flex;
   width: 100%;
   flex: 1;
-  overflow: hidden;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 /* Mobile: 縦1カラム（デフォルト） */
@@ -121,21 +122,25 @@ body {
 
   .sidebar {
     display: flex;
+    flex-direction: column;
     width: 280px;
     border-right: 1px solid var(--color-border);
     overflow-y: auto;
     flex-shrink: 0;
+    min-height: 0;
   }
 
   .main-content {
     flex: 1;
     overflow-y: auto;
+    min-height: 0;
   }
 }
 
 /* ===== メンバー選択画面 ===== */
 .member-select-container {
   padding: var(--spacing-lg);
+  min-height: 0;
 }
 
 .member-select-container h1 {
