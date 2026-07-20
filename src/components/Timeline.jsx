@@ -3,7 +3,7 @@ import { collection, query, where, orderBy, getDocs, doc, updateDoc } from 'fire
 import { db } from '../firebase'
 import { MEMBERS } from '../constants/members'
 
-export default function Timeline({ member, user, onBack }) {
+export default function Timeline({ member, user, onBack, isAdmin }) {
   const [records, setRecords] = useState([])
   const [loading, setLoading] = useState(true)
   const [editingId, setEditingId] = useState(null)
@@ -285,7 +285,7 @@ export default function Timeline({ member, user, onBack }) {
                   )
                 )}
 
-                {record.createdBy === user.uid && (
+                {(record.createdBy === user.uid || isAdmin) && (
                   <div className="record-actions">
                     {editingId === record.id && editingField === 'memberId' ? (
                       <div className="member-select-edit">
@@ -314,30 +314,36 @@ export default function Timeline({ member, user, onBack }) {
                       </div>
                     ) : (
                       <>
-                        <button
-                          className="action-btn member-btn"
-                          onClick={() => handleEditStart(record, 'memberId')}
-                          disabled={updating}
-                          title="メンバーを変更"
-                        >
-                          👤 メンバー変更
-                        </button>
-                        <button
-                          className="action-btn note-btn"
-                          onClick={() => handleEditStart(record, 'note')}
-                          disabled={updating}
-                          title="メモを編集"
-                        >
-                          📝 メモ
-                        </button>
-                        <button
-                          className="action-btn delete-btn"
-                          onClick={() => handleDelete(record.id)}
-                          disabled={updating}
-                          title="記録を削除"
-                        >
-                          🗑 削除
-                        </button>
+                        {(record.createdBy === user.uid || isAdmin) && (
+                          <button
+                            className="action-btn member-btn"
+                            onClick={() => handleEditStart(record, 'memberId')}
+                            disabled={updating}
+                            title="メンバーを変更"
+                          >
+                            👤 メンバー変更
+                          </button>
+                        )}
+                        {record.createdBy === user.uid && (
+                          <>
+                            <button
+                              className="action-btn note-btn"
+                              onClick={() => handleEditStart(record, 'note')}
+                              disabled={updating}
+                              title="メモを編集"
+                            >
+                              📝 メモ
+                            </button>
+                            <button
+                              className="action-btn delete-btn"
+                              onClick={() => handleDelete(record.id)}
+                              disabled={updating}
+                              title="記録を削除"
+                            >
+                              🗑 削除
+                            </button>
+                          </>
+                        )}
                       </>
                     )}
                   </div>

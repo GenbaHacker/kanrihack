@@ -45,8 +45,25 @@ body {
 }
 
 .user-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
   color: var(--color-text-secondary);
   font-size: 14px;
+}
+
+.admin-badge {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.header-buttons {
+  display: flex;
+  gap: var(--spacing-md);
 }
 
 .logout-button {
@@ -779,6 +796,235 @@ body {
 }
 
 .edit-btn-inline:hover {
+  color: var(--color-accent-light);
+}
+
+/* ===== メンバー管理画面 ===== */
+.member-management-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.management-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-bg-secondary);
+}
+
+.management-header h2 {
+  font-size: 20px;
+  color: var(--color-accent-light);
+  margin: 0;
+}
+
+.management-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-lg);
+}
+
+.add-member-form {
+  background-color: var(--color-bg-secondary);
+  padding: var(--spacing-md);
+  border-radius: 6px;
+  margin-bottom: var(--spacing-lg);
+}
+
+.add-member-form h3 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-accent-light);
+}
+
+.form-inputs {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.form-inputs input {
+  flex: 1;
+  min-width: 150px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-inputs input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.add-btn {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-accent);
+  color: var(--color-bg-primary);
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-btn:hover:not(:disabled) {
+  background-color: var(--color-accent-light);
+}
+
+.add-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.members-list {
+  background-color: var(--color-bg-secondary);
+  padding: var(--spacing-md);
+  border-radius: 6px;
+}
+
+.members-list h3 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-accent-light);
+}
+
+.members-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.members-table th {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-accent-light);
+  padding: var(--spacing-md);
+  text-align: left;
+  border-bottom: 2px solid var(--color-border);
+  font-weight: 600;
+}
+
+.members-table td {
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.members-table tr.inactive {
+  opacity: 0.6;
+}
+
+.members-table input[type="text"],
+.members-table input[type="number"] {
+  width: 100%;
+  padding: 4px 8px;
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  border-radius: 3px;
+  font-size: 13px;
+}
+
+.members-table input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.status-active {
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.status-inactive {
+  color: #f44336;
+  font-weight: 600;
+}
+
+.members-table .actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.members-table button {
+  padding: 4px 8px;
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.members-table button:hover:not(:disabled) {
+  background-color: var(--color-border);
+}
+
+.save-btn {
+  color: #4caf50 !important;
+  border-color: #4caf50 !important;
+}
+
+.save-btn:hover:not(:disabled) {
+  background-color: rgba(76, 175, 80, 0.1) !important;
+}
+
+.cancel-btn {
+  color: #f44336 !important;
+  border-color: #f44336 !important;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background-color: rgba(244, 67, 54, 0.1) !important;
+}
+
+.edit-btn {
+  color: #2196f3 !important;
+  border-color: #2196f3 !important;
+}
+
+.edit-btn:hover:not(:disabled) {
+  background-color: rgba(33, 150, 243, 0.1) !important;
+}
+
+.deactivate-btn {
+  color: #ffc107 !important;
+  border-color: #ffc107 !important;
+}
+
+.deactivate-btn:hover:not(:disabled) {
+  background-color: rgba(255, 193, 7, 0.1) !important;
+}
+
+.activate-btn {
+  color: #4caf50 !important;
+  border-color: #4caf50 !important;
+}
+
+.activate-btn:hover:not(:disabled) {
+  background-color: rgba(76, 175, 80, 0.1) !important;
+}
+
+.management-button {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.management-button:hover {
+  background-color: var(--color-border);
+  border-color: var(--color-accent);
   color: var(--color-accent-light);
 }
 

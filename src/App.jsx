@@ -1,21 +1,39 @@
 import { useState, useEffect } from 'react'
 import { onAuthStateChanged, signOut } from 'firebase/auth'
-import { auth } from './firebase'
+import { auth, db } from './firebase'
+import { doc, getDoc } from 'firebase/firestore'
 import LoginScreen from './components/LoginScreen'
 import MemberSelect from './components/MemberSelect'
 import InputScreen from './components/InputScreen'
 import Timeline from './components/Timeline'
+import MemberManagement from './components/MemberManagement'
 import './App.css'
 
 export default function App() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false)
   const [selectedMember, setSelectedMember] = useState(null)
-  const [viewMode, setViewMode] = useState('members') // 'members' or 'timeline'
+  const [viewMode, setViewMode] = useState('members') // 'members', 'timeline', 'management'
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser)
+      if (currentUser) {
+        // Check if user is admin
+        try {
+          const allowlistRef = doc(db, 'orgs/sawada/config/allowlist')
+          const allowlistDoc = await getDoc(allowlistRef)
+          if (allowlistDoc.exists()) {
+            const admins = allowlistDoc.data().admins || []
+            setIsAdmin(admins.includes(currentUser.email))
+          }
+        } catch (error) {
+          console.error('Admin check error:', error)
+        }
+      } else {
+        setIsAdmin(false)
+      }
       setLoading(false)
     })
     return unsubscribe
@@ -42,6 +60,14 @@ export default function App() {
     setViewMode('members')
   }
 
+  const handleManagementMode = () => {
+    setViewMode('management')
+  }
+
+  const handleBackFromManagement = () => {
+    setViewMode('members')
+  }
+
   if (loading) {
     return (
       <div className="app">
@@ -59,14 +85,24 @@ export default function App() {
       <div className="app-header">
         <div className="user-info">
           <span>{user.email}</span>
+          {isAdmin && <span className="admin-badge">管理者</span>}
         </div>
-        <button className="logout-button" onClick={handleLogout}>
-          ログアウト
-        </button>
+        <div className="header-buttons">
+          {isAdmin && viewMode === 'members' && !selectedMember && (
+            <button className="management-button" onClick={handleManagementMode}>
+              ⚙ メンバー管理
+            </button>
+          )}
+          <button className="logout-button" onClick={handleLogout}>
+            ログアウト
+          </button>
+        </div>
       </div>
 
       <div className="app-layout">
-        {viewMode === 'members' && !selectedMember ? (
+        {viewMode === 'management' ? (
+          <MemberManagement onBack={handleBackFromManagement} />
+        ) : viewMode === 'members' && !selectedMember ? (
           <MemberSelect onMemberSelect={handleMemberSelect} onViewTimeline={handleViewTimeline} />
         ) : (
           <>
@@ -80,7 +116,7 @@ export default function App() {
                 <InputScreen member={selectedMember} user={user} onBack={handleBack} />
               )}
               {viewMode === 'timeline' && (
-                <Timeline member={selectedMember} user={user} onBack={handleBack} />
+                <Timeline member={selectedMember} user={user} onBack={handleBack} isAdmin={isAdmin} />
               )}
             </div>
           </>
