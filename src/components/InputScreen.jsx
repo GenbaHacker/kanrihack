@@ -40,6 +40,8 @@ export default function InputScreen({ member, onBack, user }) {
         createdBy: auth.currentUser.uid,
         createdByEmail: auth.currentUser.email,
         createdAt: serverTimestamp(),
+        note: '',
+        deleted: false,
       })
 
       setMessage('追記しました')

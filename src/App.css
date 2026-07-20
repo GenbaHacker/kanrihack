@@ -610,6 +610,178 @@ body {
   cursor: not-allowed;
 }
 
+.record-note {
+  padding: var(--spacing-md);
+  background-color: rgba(255, 193, 7, 0.1);
+  border-left: 3px solid #ffc107;
+  border-radius: 4px;
+  margin-top: var(--spacing-md);
+  font-size: 14px;
+  color: var(--color-text-primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+}
+
+.record-note strong {
+  color: #ffc107;
+  flex-shrink: 0;
+}
+
+.record-note-edit {
+  padding: var(--spacing-md);
+  background-color: rgba(33, 150, 243, 0.1);
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  border-radius: 4px;
+  margin-top: var(--spacing-md);
+}
+
+.note-textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: var(--spacing-md);
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.note-textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+.note-edit-buttons {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+.note-edit-buttons button {
+  flex: 1;
+}
+
+.add-note-btn {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: rgba(255, 193, 7, 0.1);
+  border: 1px dashed #ffc107;
+  color: #ffc107;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 13px;
+  margin-top: var(--spacing-md);
+  transition: all 0.2s ease;
+}
+
+.add-note-btn:hover {
+  background-color: rgba(255, 193, 7, 0.2);
+  border-style: solid;
+}
+
+.record-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  flex: 1;
+  min-width: 100px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover:not(:disabled) {
+  background-color: var(--color-border);
+  border-color: var(--color-accent);
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.action-btn.member-btn {
+  color: #2196f3;
+}
+
+.action-btn.member-btn:hover:not(:disabled) {
+  background-color: rgba(33, 150, 243, 0.1);
+  border-color: #2196f3;
+}
+
+.action-btn.note-btn {
+  color: #ffc107;
+}
+
+.action-btn.note-btn:hover:not(:disabled) {
+  background-color: rgba(255, 193, 7, 0.1);
+  border-color: #ffc107;
+}
+
+.action-btn.delete-btn {
+  color: #f44336;
+}
+
+.action-btn.delete-btn:hover:not(:disabled) {
+  background-color: rgba(244, 67, 54, 0.1);
+  border-color: #f44336;
+}
+
+.member-select-edit {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+}
+
+.member-select-edit select {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.member-select-edit select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.member-select-edit button {
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 13px;
+}
+
+.edit-btn-inline {
+  padding: 2px 4px;
+  background-color: transparent;
+  border: none;
+  color: var(--color-accent);
+  cursor: pointer;
+  font-size: 12px;
+  margin-left: var(--spacing-sm);
+  transition: all 0.2s ease;
+}
+
+.edit-btn-inline:hover {
+  color: var(--color-accent-light);
+}
+
 .record-body {
   color: var(--color-text-primary);
   font-size: 14px;
