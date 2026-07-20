@@ -36,7 +36,8 @@ service cloud.firestore {
       );
       allow update: if canAccess()
         && request.auth.uid == resource.data.createdBy
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['meetingDate']);
+        && request.resource.data.diff(resource.data).affectedKeys().size() == 1
+        && request.resource.data.diff(resource.data).affectedKeys().hasAny(['meetingDate']);
       allow delete: if false;
     }
 
