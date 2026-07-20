@@ -46,10 +46,23 @@ body {
 
 .user-info {
   display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--color-text-secondary);
+}
+
+.user-details {
+  display: flex;
   align-items: center;
   gap: var(--spacing-md);
-  color: var(--color-text-secondary);
   font-size: 14px;
+}
+
+.user-uid {
+  font-size: 11px;
+  color: rgba(224, 224, 224, 0.5);
+  font-family: monospace;
+  cursor: help;
 }
 
 .admin-badge {

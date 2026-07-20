@@ -46,6 +46,12 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // orgs/sawada/userProfiles collection (user-specific admin flag)
+    match /orgs/sawada/userProfiles/{uid} {
+      allow read: if canAccess() && request.auth.uid == uid;
+      allow write: if false;   // 付与はコンソール（将来はFunctions）から
+    }
+
     // orgs/sawada/config/allowlist (deny all - admin only)
     match /orgs/sawada/config/allowlist {
       allow read, write: if false;
