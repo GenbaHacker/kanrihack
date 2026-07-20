@@ -3,10 +3,19 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../firebase'
 import { auth } from '../firebase'
 
+function getTodayString() {
+  const today = new Date()
+  const year = today.getFullYear()
+  const month = String(today.getMonth() + 1).padStart(2, '0')
+  const day = String(today.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
 export default function InputScreen({ member, onBack, user }) {
   const [activeTab, setActiveTab] = useState('text')
   const [isShared, setIsShared] = useState(true)
   const [textValue, setText] = useState('')
+  const [meetingDate, setMeetingDate] = useState(getTodayString())
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
 
@@ -26,6 +35,7 @@ export default function InputScreen({ member, onBack, user }) {
         memberName: member.name,
         type: 'text',
         body: textValue,
+        meetingDate: meetingDate,
         visibility: isShared ? 'shared' : 'private',
         createdBy: auth.currentUser.uid,
         createdByEmail: auth.currentUser.email,
@@ -51,15 +61,27 @@ export default function InputScreen({ member, onBack, user }) {
         </button>
         <div className="header-info">
           <h2>{member.name}</h2>
-          <div className="share-toggle">
-            <label>
+          <div className="header-controls">
+            <div className="meeting-date-field">
+              <label htmlFor="meeting-date">面談日</label>
               <input
-                type="checkbox"
-                checked={isShared}
-                onChange={(e) => setIsShared(e.target.checked)}
+                id="meeting-date"
+                type="date"
+                value={meetingDate}
+                onChange={(e) => setMeetingDate(e.target.value)}
+                disabled={saving}
               />
-              <span>{isShared ? '共有' : '非公開'}</span>
-            </label>
+            </div>
+            <div className="share-toggle">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={isShared}
+                  onChange={(e) => setIsShared(e.target.checked)}
+                />
+                <span>{isShared ? '共有' : '非公開'}</span>
+              </label>
+            </div>
           </div>
         </div>
       </div>

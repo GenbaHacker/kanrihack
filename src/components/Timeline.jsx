@@ -34,7 +34,7 @@ export default function Timeline({ member, user, onBack }) {
       )
       const snapshotB = await getDocs(qB)
 
-      // Merge and sort by createdAt descending
+      // Merge and sort by meetingDate descending, then createdAt descending
       const allRecords = [
         ...snapshotA.docs.map((doc) => ({
           id: doc.id,
@@ -46,7 +46,15 @@ export default function Timeline({ member, user, onBack }) {
           ...doc.data(),
           createdAt: doc.data().createdAt?.toDate?.() || new Date(),
         })),
-      ].sort((a, b) => b.createdAt - a.createdAt)
+      ].sort((a, b) => {
+        // Sort by meetingDate descending (use createdAt date as fallback)
+        const aDate = a.meetingDate || a.createdAt.toISOString().split('T')[0]
+        const bDate = b.meetingDate || b.createdAt.toISOString().split('T')[0]
+        const dateCompare = bDate.localeCompare(aDate)
+        if (dateCompare !== 0) return dateCompare
+        // If same date, sort by createdAt descending
+        return b.createdAt - a.createdAt
+      })
 
       setRecords(allRecords)
     } catch (error) {
@@ -64,6 +72,13 @@ export default function Timeline({ member, user, onBack }) {
       hour: '2-digit',
       minute: '2-digit',
     })
+  }
+
+  const formatMeetingDate = (meetingDate) => {
+    if (!meetingDate) return ''
+    // meetingDate is YYYY-MM-DD format
+    const [year, month, day] = meetingDate.split('-')
+    return `${month}/${day}`
   }
 
   return (
@@ -86,7 +101,16 @@ export default function Timeline({ member, user, onBack }) {
               <div key={record.id} className="record-item">
                 <div className="record-meta">
                   <span className="record-type">[{record.type}]</span>
-                  <span className="record-date">{formatDate(record.createdAt)}</span>
+                  <span className="record-date">
+                    {record.meetingDate ? (
+                      <>
+                        <span className="meeting-date">[面談: {formatMeetingDate(record.meetingDate)}]</span>
+                        <span className="created-date">{formatDate(record.createdAt)}</span>
+                      </>
+                    ) : (
+                      formatDate(record.createdAt)
+                    )}
+                  </span>
                   <span className="record-visibility">
                     {record.visibility === 'private' ? '🔒' : '🌐'}
                   </span>

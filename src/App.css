@@ -205,8 +205,48 @@ body {
   margin: 0;
 }
 
-.share-toggle {
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
   margin-left: auto;
+}
+
+.meeting-date-field {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 14px;
+}
+
+.meeting-date-field label {
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+.meeting-date-field input[type="date"] {
+  padding: 4px 8px;
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.meeting-date-field input[type="date"]:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+}
+
+.meeting-date-field input[type="date"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.share-toggle {
+  flex-shrink: 0;
 }
 
 .share-toggle label {
@@ -473,12 +513,33 @@ body {
   margin-bottom: var(--spacing-sm);
   font-size: 12px;
   color: var(--color-text-secondary);
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .record-type {
   background-color: var(--color-bg-tertiary);
   padding: 2px 6px;
   border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.record-date {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.meeting-date {
+  background-color: rgba(212, 175, 55, 0.2);
+  color: var(--color-accent-light);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.created-date {
+  color: var(--color-text-secondary);
 }
 
 .record-body {
