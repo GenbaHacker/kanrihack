@@ -12,9 +12,6 @@ export default function ActionsList({ user, onBack, onJumpToRecord }) {
   const [filterMember, setFilterMember] = useState('')
   const [filterStatus, setFilterStatus] = useState('')
 
-  // 未完了系状態
-  const incompleteStatuses = ['未着手', '確認中', '着手予定', '今後の予定', '']
-
   useEffect(() => {
     loadRecords()
   }, [])
@@ -77,10 +74,7 @@ export default function ActionsList({ user, onBack, onJumpToRecord }) {
 
       if (tabMode === 'actions') {
         parsed.actionItems.forEach((action) => {
-          // フィルター適用（未完了系のみ表示がデフォルト）
-          if (!incompleteStatuses.includes(action.status)) {
-            return // スキップ
-          }
+          // parseActionItems は既に未完了のみをフィルタリング済み
           if (filterAssignee && action.assignee !== filterAssignee) {
             return
           }
@@ -126,9 +120,8 @@ export default function ActionsList({ user, onBack, onJumpToRecord }) {
       records.forEach((record) => {
         const parsed = parseMeetingNotes(record.body)
         parsed.actionItems.forEach((action) => {
-          if (incompleteStatuses.includes(action.status)) {
-            assignees.add(action.assignee)
-          }
+          // parseActionItems は既に未完了のみをフィルタリング済み
+          assignees.add(action.assignee)
         })
       })
       return Array.from(assignees).sort()
@@ -142,9 +135,8 @@ export default function ActionsList({ user, onBack, onJumpToRecord }) {
       records.forEach((record) => {
         const parsed = parseMeetingNotes(record.body)
         parsed.actionItems.forEach((action) => {
-          if (incompleteStatuses.includes(action.status)) {
-            statuses.add(action.status || '(未定)')
-          }
+          // parseActionItems は既に未完了のみをフィルタリング済み
+          statuses.add(action.status || '(未定)')
         })
       })
       return Array.from(statuses).sort()

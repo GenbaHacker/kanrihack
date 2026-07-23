@@ -190,9 +190,7 @@ export default function Timeline({ member, user, onBack, isAdmin }) {
           <div className="records-list">
             {records.map((record) => {
               const parsed = parseMeetingNotes(record.body)
-              const incompleteActions = parsed.actionItems.filter((a) =>
-                ['未着手', '確認中', '着手予定', '今後の予定', ''].includes(a.status)
-              )
+              // parseActionItems は既に未完了のみをフィルタリング済み
               return (
                 <div key={record.id} className="record-item">
                   <div className="record-meta">
@@ -240,11 +238,11 @@ export default function Timeline({ member, user, onBack, isAdmin }) {
                   <span className="record-visibility">
                     {record.visibility === 'private' ? '🔒' : '🌐'}
                   </span>
-                  {(incompleteActions.length > 0 || parsed.openQuestions.length > 0) && (
+                  {(parsed.actionItems.length > 0 || parsed.openQuestions.length > 0) && (
                     <span className="record-badges">
-                      {incompleteActions.length > 0 && (
+                      {parsed.actionItems.length > 0 && (
                         <span className="badge badge-actions">
-                          📋 {incompleteActions.length}
+                          📋 {parsed.actionItems.length}
                         </span>
                       )}
                       {parsed.openQuestions.length > 0 && (
@@ -371,8 +369,7 @@ export default function Timeline({ member, user, onBack, isAdmin }) {
 
                 <div className="record-author">{record.createdByEmail}</div>
               </div>
-              )
-            })}
+            )})}
           </div>
         )}
       </div>
