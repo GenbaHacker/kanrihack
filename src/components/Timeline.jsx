@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { collection, query, where, orderBy, getDocs, doc, updateDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 import { MEMBERS } from '../constants/members'
+import { parseMeetingNotes } from '../utils/parseMeetingNotes'
 
 export default function Timeline({ member, user, onBack, isAdmin }) {
   const [records, setRecords] = useState([])
@@ -187,10 +188,15 @@ export default function Timeline({ member, user, onBack, isAdmin }) {
           <div className="no-records">記録がありません</div>
         ) : (
           <div className="records-list">
-            {records.map((record) => (
-              <div key={record.id} className="record-item">
-                <div className="record-meta">
-                  <span className="record-type">[{record.type}]</span>
+            {records.map((record) => {
+              const parsed = parseMeetingNotes(record.body)
+              const incompleteActions = parsed.actionItems.filter((a) =>
+                ['未着手', '確認中', '着手予定', '今後の予定', ''].includes(a.status)
+              )
+              return (
+                <div key={record.id} className="record-item">
+                  <div className="record-meta">
+                    <span className="record-type">[{record.type}]</span>
                   {editingId === record.id && editingField === 'meetingDate' ? (
                     <div className="record-date-edit">
                       <input
@@ -234,6 +240,20 @@ export default function Timeline({ member, user, onBack, isAdmin }) {
                   <span className="record-visibility">
                     {record.visibility === 'private' ? '🔒' : '🌐'}
                   </span>
+                  {(incompleteActions.length > 0 || parsed.openQuestions.length > 0) && (
+                    <span className="record-badges">
+                      {incompleteActions.length > 0 && (
+                        <span className="badge badge-actions">
+                          📋 {incompleteActions.length}
+                        </span>
+                      )}
+                      {parsed.openQuestions.length > 0 && (
+                        <span className="badge badge-questions">
+                          ❓ {parsed.openQuestions.length}
+                        </span>
+                      )}
+                    </span>
+                  )}
                 </div>
 
                 <div className="record-body">{record.body}</div>
@@ -351,7 +371,8 @@ export default function Timeline({ member, user, onBack, isAdmin }) {
 
                 <div className="record-author">{record.createdByEmail}</div>
               </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>

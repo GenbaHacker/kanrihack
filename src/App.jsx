@@ -7,6 +7,8 @@ import MemberSelect from './components/MemberSelect'
 import InputScreen from './components/InputScreen'
 import Timeline from './components/Timeline'
 import MemberManagement from './components/MemberManagement'
+import ActionsList from './components/ActionsList'
+import { MEMBERS } from './constants/members'
 import './App.css'
 
 export default function App() {
@@ -14,7 +16,7 @@ export default function App() {
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
   const [selectedMember, setSelectedMember] = useState(null)
-  const [viewMode, setViewMode] = useState('members') // 'members', 'timeline', 'management'
+  const [viewMode, setViewMode] = useState('members') // 'members', 'timeline', 'management', 'actions'
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -70,6 +72,19 @@ export default function App() {
     setViewMode('members')
   }
 
+  const handleActionsMode = () => {
+    setSelectedMember(null)
+    setViewMode('actions')
+  }
+
+  const handleJumpToRecord = (recordId, memberName) => {
+    const member = MEMBERS.find((m) => m.name === memberName)
+    if (member) {
+      setSelectedMember(member)
+      setViewMode('timeline')
+    }
+  }
+
   if (loading) {
     return (
       <div className="app">
@@ -93,10 +108,17 @@ export default function App() {
           <span className="user-uid" title="UID をコピーして userProfiles で管理者設定">{user.uid}</span>
         </div>
         <div className="header-buttons">
-          {isAdmin && viewMode === 'members' && !selectedMember && (
-            <button className="management-button" onClick={handleManagementMode}>
-              ⚙ メンバー管理
-            </button>
+          {viewMode === 'members' && !selectedMember && (
+            <>
+              <button className="actions-button" onClick={handleActionsMode}>
+                📋 アクション一覧
+              </button>
+              {isAdmin && (
+                <button className="management-button" onClick={handleManagementMode}>
+                  ⚙ メンバー管理
+                </button>
+              )}
+            </>
           )}
           <button className="logout-button" onClick={handleLogout}>
             ログアウト
@@ -107,6 +129,8 @@ export default function App() {
       <div className="app-layout">
         {viewMode === 'management' ? (
           <MemberManagement onBack={handleBackFromManagement} />
+        ) : viewMode === 'actions' ? (
+          <ActionsList user={user} onBack={handleBack} onJumpToRecord={handleJumpToRecord} />
         ) : viewMode === 'members' && !selectedMember ? (
           <MemberSelect onMemberSelect={handleMemberSelect} onViewTimeline={handleViewTimeline} />
         ) : (
